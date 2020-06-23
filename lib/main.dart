@@ -3,8 +3,16 @@ import 'package:FLUTTER_COMPLETE_GUIDE/widgets/chart.dart';
 import 'package:FLUTTER_COMPLETE_GUIDE/widgets/new_transaction.dart';
 import 'package:FLUTTER_COMPLETE_GUIDE/widgets/transaction_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]);
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -45,6 +53,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _showChart = false;
   final List<Transaction> _userTranactions = [
     Transaction(
       id: 't1',
@@ -59,31 +68,31 @@ class _MyHomePageState extends State<MyHomePage> {
       date: DateTime.now().subtract(Duration(days: 2)),
     ),
     Transaction(
-      id: 't1',
+      id: 't3',
       title: "Nike Shose",
-      amount: 269.99,
+      amount: 169.99,
       date: DateTime.now().subtract(Duration(days: 4)),
     ),
     Transaction(
-      id: 't2',
+      id: 't4',
       title: "Bablo Grocery",
       amount: 16.99,
       date: DateTime.now().subtract(Duration(days: 1)),
     ),
     Transaction(
-      id: 't2',
+      id: 't5',
       title: "Milk",
       amount: 6.99,
       date: DateTime.now().subtract(Duration(days: 6)),
     ),
     Transaction(
-      id: 't1',
+      id: 't6',
       title: "New Shose",
       amount: 69.99,
       date: DateTime.now(),
     ),
     Transaction(
-      id: 't2',
+      id: 't7',
       title: "Weekly Grocery",
       amount: 16.99,
       date: DateTime.now(),
@@ -140,23 +149,46 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: Text('Personal Expenses'),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => _startAddNewTransaction(context),
+        )
+      ],
+    );
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Personal Expenses'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => _startAddNewTransaction(context),
-          )
-        ],
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(_recentTransactions),
-            TransactionList(_userTranactions, _deleteTransaction),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Show Chart"),
+                Switch(
+                  value: true,
+                  onChanged: (val) {},
+                )
+              ],
+            ),
+            Container(
+              height: (MediaQuery.of(context).size.height -
+                      appBar.preferredSize.height -
+                      MediaQuery.of(context).padding.top) *
+                  0.3,
+              child: Chart(_recentTransactions),
+            ),
+            Container(
+              height: (MediaQuery.of(context).size.height -
+                      appBar.preferredSize.height -
+                      MediaQuery.of(context).padding.top) *
+                  0.7,
+              child: TransactionList(_userTranactions, _deleteTransaction),
+            ),
           ],
         ),
       ),
